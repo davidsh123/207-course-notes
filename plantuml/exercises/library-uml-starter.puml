@@ -65,6 +65,8 @@ class HoldingSystem {
 ' TODO: add the arrows between all of your types.
 Borrowable <|.. Book
 Borrowable <|.. DVD
+Item <|-- Book
+Item <|-- DVD
 
 
 @enduml
