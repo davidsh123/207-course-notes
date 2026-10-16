@@ -44,7 +44,7 @@ class ElectricCar {
 }
 
 Vehicle <|-- Car
-Vehicle <|-- ElectricCar
+Car <|-- ElectricCar
 Chargeable <|.. ElectricCar
 
 
