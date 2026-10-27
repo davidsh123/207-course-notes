@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Exercise (Chapter: APIs, JSON, and Files) — reading data from a file into objects.
@@ -109,7 +111,15 @@ public class NumberTriangle {
     //       value of wherever you ended up. An empty path means "stay here".
     //       Hint: String#charAt(int) and String#length() are all you need for the
     //       iterative version; a recursive version can use String#substring(1).
-    return 0;
+
+    if (path.isEmpty()){
+      return this.root;
+    }
+    if (path.charAt(0) == 'l') {
+      return this.left.retrieve(path.substring(1));
+    }
+    return this.right.retrieve(path.substring(1));
+
   }
 
   /**
@@ -170,6 +180,8 @@ public class NumberTriangle {
     // TODO: define any variables that you want to use to keep track of things
     //       between iterations of the loop below (for example, the row of
     //       NumberTriangle objects that you built on the previous iteration).
+    int currRow = 0;
+    List<NumberTriangle> prevRow = new ArrayList<>();
 
     // We need to return the top of the NumberTriangle, so here is a variable for it.
     NumberTriangle top = null;
@@ -186,6 +198,35 @@ public class NumberTriangle {
       //       as the children of the previous row. Remember the aliasing: the
       //       right child of one node is the left child of the next node over.
 
+      if (currRow == 0) {
+        top = new NumberTriangle(Integer.valueOf(line));
+        prevRow.add(top);
+      }
+      else {
+        String[] values = line.split(" ");
+
+        List<NumberTriangle> thisRow = new ArrayList<>();
+
+        NumberTriangle first = new NumberTriangle(Integer.valueOf(values[0]));
+        prevRow.get(0).left = first;
+        thisRow.add(first);
+
+        for (int i = 1; i < values.length - 1; i++) {
+          NumberTriangle next = new NumberTriangle(Integer.valueOf(values[i]));
+          prevRow.get(i-1).right = next;
+          prevRow.get(i).left = next;
+          thisRow.add(next);
+        }
+
+        NumberTriangle last = new NumberTriangle(Integer.valueOf(values[values.length - 1]));
+        prevRow.get(prevRow.size() - 1).right = last;
+        thisRow.add(last);
+
+
+        prevRow = thisRow;
+      }
+
+      currRow++;
       // read the next line
       line = br.readLine();
     }
